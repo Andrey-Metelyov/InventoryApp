@@ -22,16 +22,20 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         )
     }
 
-    public fun addNewItem(itemName: String, itemPrice: String, itemCount: String) {
+    fun addNewItem(itemName: String, itemPrice: String, itemCount: String) {
         val newItem = getNewItemEntry(itemName, itemPrice, itemCount)
         insertItem(newItem)
     }
 
-    public fun isEntryValid(itemName: String, itemPrice: String, itemCount: String): Boolean {
+    fun isEntryValid(itemName: String, itemPrice: String, itemCount: String): Boolean {
         if (itemName.isBlank() || itemPrice.isBlank() || itemCount.isBlank()) {
             return false
         }
         return true
+    }
+
+    fun retrieveItem(id: Int): LiveData<Item> {
+        return itemDao.getItem(id).asLiveData()
     }
 }
 
