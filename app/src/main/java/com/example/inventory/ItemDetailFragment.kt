@@ -18,6 +18,7 @@ package com.example.inventory
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,7 +85,17 @@ class ItemDetailFragment : Fragment() {
      * Deletes the current item and navigates to the list fragment.
      */
     private fun deleteItem() {
+        viewModel.deleteItem(item)
         findNavController().navigateUp()
+    }
+
+    private fun editItem() {
+//        Log.d("ItemDetailFragment", R.string.edit_fragment_title.toString())
+        val action = ItemDetailFragmentDirections.actionItemDetailFragmentToAddItemFragment(
+            getString(R.string.edit_fragment_title),
+            item.id
+        )
+        this.findNavController().navigate(action)
     }
 
     private fun bind(item: Item) {
@@ -92,6 +103,10 @@ class ItemDetailFragment : Fragment() {
             itemName.text = item.itemName
             itemPrice.text = item.getFormattedPrice()
             itemCount.text = item.quantityInStock.toString()
+            sellItem.isEnabled = viewModel.isStockAvailable(item)
+            sellItem.setOnClickListener { viewModel.sellItem(item) }
+            deleteItem.setOnClickListener { showConfirmationDialog() }
+            editItem.setOnClickListener { editItem() }
         }
     }
 
